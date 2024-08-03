@@ -4,92 +4,99 @@ import time
 import os
 from dotenv import load_dotenv
 
-# Load environment variables from the .env file
+# Load environment variables
 load_dotenv()
 
-# Define the API endpoints and your API key
-upscale_url = "https://api.apiframe.pro/upscale-1x"
+# API endpoints
+upscale_url = "https://api.apiframe.pro/upscale-highres"
 fetch_url = "https://api.apiframe.pro/fetch"
-api_key = os.getenv('API_KEY')  # API key from the .env file
 
-# Check if the API key is available
+# Get API key from environment variable
+api_key = os.getenv('API_KEY')
+
 if not api_key:
     raise ValueError("API key is not set in environment variables.")
 
-# Define the payload for the upscale request
+# Upscale request payload
 upscale_payload = json.dumps({
-    "parent_task_id": "e863f070-fe24-4b92-9f01-6b57a9fa59ed",
-    "index": "2"  # Assuming you want to upscale the second image
+    "parent_task_id": "f4750af5-3c42-41fd-9d81-b912c6ff7318",
+    "type": "4x"
 })
 
-# Define the headers
+# Headers
 headers = {
     'Content-Type': 'application/json',
     'Authorization': api_key
 }
 
 try:
-    # Send the upscale request
+    # Send upscale request
     response = requests.post(upscale_url, headers=headers, data=upscale_payload)
-    response.raise_for_status()  # Raise an error for bad responses
+    response.raise_for_status()
     upscale_response = response.json()
 
-    # Extract the task_id from the response
     task_id = upscale_response.get("task_id")
     if not task_id:
         raise ValueError("No task_id returned in response.")
     print(f"Upscale Task ID: {task_id}")
 
-    # Retry mechanism
-    max_retries = 20
+    # Polling for task completion
+    max_retries = 30
     retry_count = 0
-    image_url = ""
     status = "processing"
-    timeout = 600  # 10 minutes timeout
+    timeout = 900  # 15 minutes timeout
 
     start_time = time.time()
 
     while retry_count < max_retries and status == "processing" and (time.time() - start_time) < timeout:
-        time.sleep(min(15 * (1.5 ** retry_count), 240))  # Exponential backoff, max 240 seconds
+        time.sleep(min(10 * (1.2 ** retry_count), 120))  # Exponential backoff, max 120 seconds
 
-        # Define the payload for the fetch request
-        fetch_payload = json.dumps({
-            "task_id": task_id
-        })
-
-        # Send the fetch request
+        # Fetch request
+        fetch_payload = json.dumps({"task_id": task_id})
         fetch_response = requests.post(fetch_url, headers=headers, data=fetch_payload)
-        fetch_response.raise_for_status()  # Raise an error for bad responses
+        fetch_response.raise_for_status()
         fetch_result = fetch_response.json()
 
-        # Extract the status, percentage, and image URL from the fetch result
         status = fetch_result.get("status", "processing")
         percentage = fetch_result.get("percentage", "N/A")
-        image_url = fetch_result.get("image_url", "")
         
-        # Check the status of the task
         if status == "processing":
             print(f"Attempt {retry_count + 1}: Processing ({percentage}% complete). Waiting...")
-        else:
+        elif status in ["finished", "success"]:
             print("Upscaling completed.")
+            break
+        else:
+            print(f"Unexpected status: {status}. Stopping retries.")
             break
 
         retry_count += 1
 
-    # Print the upscaled image URL
-    if image_url:
+    # Check final result
+    if status in ["finished", "success"]:
+        image_url = fetch_result.get("image_url")
+        task_type = fetch_result.get("task_type")
         print(f"Upscaled Image URL: {image_url}")
+        print(f"Task Type: {task_type}")
         
         # Save URL to a file
-        with open('upscaled_image_url.txt', 'w') as f:
+        with open('upscaled_2x-4x_url.txt', 'w') as f:
+            f.write(f"Upscaled 2x-4x Task ID: {task_id}\n")
             f.write(f"Upscaled Image URL: {image_url}\n")
-        print("Upscaled Image URL saved to upscaled_image_url.txt")
+            f.write(f"Task Type: {task_type}\n")
+        print("Upscaled Image URL saved to upscaled_2x-4x_url.txt")
     else:
-        print(f"Failed to retrieve upscaled image URL. Final status: {status}")
+        print(f"Failed to retrieve upscaled image. Final status: {status}")
         print(f"Final response: {json.dumps(fetch_result, indent=2)}")
 
 except requests.exceptions.RequestException as e:
     print(f"Request error: {e}")
-    print(f"Response content: {e.response.content if e.response else 'No response content'}")
+    if hasattr(e, 'response'):
+        print(f"Response status code: {e.response.status_code}")
+        print(f"Response content: {e.response.text}")
+    else:
+        print("No response available")
+except json.JSONDecodeError as e:
+    print(f"JSON decode error: {e}")
+    print(f"Raw response content: {response.text}")
 except ValueError as e:
     print(f"Value error: {e}")

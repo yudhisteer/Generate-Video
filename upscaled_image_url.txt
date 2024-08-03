@@ -1,9 +1,0 @@
-Upscaled Image URL: https://cdn.apiframe.pro/images/baf4ec28-3f44-4150-ba2e-cccd36c2a5a1.png
-
-
-Upscale Task ID: 88d2b902-d17c-452d-9cc9-7d1d6745d102
-Upscaling completed.
-Failed to retrieve upscaled image URL. Final status: staged
-Final response: {
-  "task_id": "88d2b902-d17c-452d-9cc9-7d1d6745d102",
-  

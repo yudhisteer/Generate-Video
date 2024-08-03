@@ -1,0 +1,3 @@
+Upscaled Creative-Subtle Task ID: 45b72e99-cba2-428e-a4be-e3ab7f5cee73
+Creative Upscaled Image URL: https://cdn.apiframe.pro/images/45b72e99-cba2-428e-a4be-e3ab7f5cee73.png
+Task Type: upscale-creative

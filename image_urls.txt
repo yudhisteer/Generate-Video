@@ -1,6 +1,7 @@
-Original Image URL: https://cdn.discordapp.com/attachments/1266541205261520940/1267725155119927306/merleheathcoteh74970_23119_a_sunflower_field_in_the_wind_6b020bcd-12ff-4153-9b40-3c55de3cff8b.png?ex=66a9d48e&is=66a8830e&hm=bafb3f1b34a60344d1d11cbe41767209052cd9784623fe5425b543ff53a47764&
+Imagine Task ID: f9ac580f-85fe-4880-9424-b3a5c81ed62a
+Original Image URL: https://cdn.discordapp.com/attachments/1241570852060004393/1267939201979256923/jaydonkreigerwi59433_A_traditional_Indian_chef_in_authentic_att_c49947f2-3ed3-4c65-94f6-e7898b998945.png?ex=66aa9be6&is=66a94a66&hm=130973e21400fef0fc5733a4a52c077eeac106ba0dc2dec1b2096ef75aef57d2&
 Generated Image URLs:
-https://cdn.apiframe.pro/images/183526247824744696436628-1.png
-https://cdn.apiframe.pro/images/183526247824744696436628-2.png
-https://cdn.apiframe.pro/images/183526247824744696436628-3.png
-https://cdn.apiframe.pro/images/183526247824744696436628-4.png
+https://cdn.apiframe.pro/images/540472424596378943971758-1.png
+https://cdn.apiframe.pro/images/540472424596378943971758-2.png
+https://cdn.apiframe.pro/images/540472424596378943971758-3.png
+https://cdn.apiframe.pro/images/540472424596378943971758-4.png

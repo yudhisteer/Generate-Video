@@ -14,7 +14,7 @@ if not api_key:
     raise ValueError("API key is not set in environment variables.")
 
 imagine_payload = json.dumps({
-    "prompt": "a sunflower field in the wind",
+    "prompt": "A traditional Indian chef in authentic attire, carefully layering marinated chicken and fragrant basmati rice in a large copper pot. The chef's hands are seen sprinkling saffron-infused milk over the dish, highlighting the meticulous preparation process.",
     "aspect_ratio": "3:2",
     "webhook_url": "",
     "webhook_secret": ""
@@ -45,7 +45,7 @@ try:
     start_time = time.time()
 
     while retry_count < max_retries and status not in ["finished", "completed"] and (time.time() - start_time) < timeout:
-        time.sleep(min(15 * (1.5 ** retry_count), 240))  # Exponential backoff, max 60 seconds
+        time.sleep(min(15 * (1.5 ** retry_count), 240))  # Exponential backoff, max 240 seconds
 
         fetch_payload = json.dumps({"task_id": task_id})
 
@@ -79,6 +79,7 @@ try:
         
         # Save URLs to a file
         with open('image_urls.txt', 'w') as f:
+            f.write(f"Imagine Task ID: {task_id}\n")
             f.write(f"Original Image URL: {original_image_url}\n")
             f.write("Generated Image URLs:\n")
             for url in image_urls:
