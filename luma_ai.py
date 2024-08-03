@@ -12,6 +12,12 @@ import json
 import time
 import os
 
+# Make sure to set this environment variable before running the script
+api_key = os.getenv("API_KEY")
+if not api_key:
+    raise ValueError("API_KEY environment variable is not set")
+
+
 def generate_video_url(api_key, prompt, image_url, enhance_prompt=False, max_retries=30, timeout=1800):
     submission_url = "https://api.apiframe.pro/luma-imagine"
     
@@ -67,7 +73,7 @@ def generate_video_url(api_key, prompt, image_url, enhance_prompt=False, max_ret
         elif status in ["completed", "finished", "success"]:
             video_url = result.get("video_url")
             if video_url:
-                return {"video_url": video_url}
+                return video_url
             else:
                 return {"error": "Video URL not found in the completed response.", "details": result}
         else:
@@ -79,14 +85,9 @@ def generate_video_url(api_key, prompt, image_url, enhance_prompt=False, max_ret
         return {"error": "Max retries reached. Task not completed.", "details": result}
 
 
+if __name__ == "__main__":
+    prompt = "Explosion"
+    image_url = "https://yudhisteer.github.io/Git/cat.png"
 
-# Make sure to set this environment variable before running the script
-api_key = os.getenv("API_KEY")
-if not api_key:
-    raise ValueError("API_KEY environment variable is not set")
-
-prompt = "Explosion"
-image_url = "https://yudhisteer.github.io/Git/cat.png"
-
-video_result = generate_video_url(api_key, prompt, image_url)
-print(video_result)
+    video_result = generate_video_url(api_key, prompt, image_url)
+    print(video_result)
